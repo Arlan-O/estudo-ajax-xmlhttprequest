@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="xmltojson.js"></script>
+
+    <script>
+        function getFilmes() {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.open('GET', 'http://localhost/ajax/ajax/filmes.xml')
+
+            xmlHttp.onreadystatechange = () => {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    let XMLFilmes = xmlHttp.responseText
+                    // console.log(XMLFilmes)
+
+                    let parser = new DOMParser()
+
+                    domFilmes = parser.parseFromString(XMLFilmes, 'text/xml')
+
+                    jsonFilmes = xmlToJson(domFilmes)
+
+                    console.log(jsonFilmes)
+
+                    for (let i in jsonFilmes['filmes']['filme']) {
+                        let item = jsonFilmes['filmes']['filme'][i]
+
+                        let divRow = document.createElement('div')
+                        divRow.className = 'row'
+
+                        let divCol = document.createElement('div')
+                        divCol.className = 'col'
+
+                        let p1 = document.createElement('p')
+                        p1.innerHTML = '<strong>TÍTULO: </strong>' + item['titulo']['#text']
+
+                        let p2 = document.createElement('p')
+                        p2.innerHTML = '<strong>RESUMO: </strong>' + item['resumo']['#text']
+
+                        //============================GENERO===========================
+
+                        let genero = ''
+                        for (let g in item.genero) {
+                            if (genero) genero += ', '
+
+                            genero += item.genero[g]['#text']
+                        }
+
+                        let p3 = document.createElement('p')
+                        p3.innerHTML = '<strong>GÊNERO: </strong>' + genero
+
+                        //========================ATOR================================
+
+                        let elenco = ''
+                        for (let e in item.elenco.ator) {
+                            if (elenco) elenco += ', '
+
+                            elenco += item.elenco.ator[e]['#text']
+                        }
+
+                        let p4 = document.createElement('p')
+                        p4.innerHTML = '<strong>ELENCO: </strong>' + elenco
+                        //=============================================================
+
+                        let p5 = document.createElement('p')
+                        p5.innerHTML = '<strong>DATA DE LANÇAMENTO: </strong>' + item.dataLancamento['#text'] + ' (' + item.dataLancamento['@attributes']['pais'] + ')'
+
+                        let hr = document.createElement('hr')
+                        // hr.innerHTML = '<hr>'
+
+                        divRow.appendChild(divCol)
+                        divCol.appendChild(p1)
+                        divCol.appendChild(p2)
+                        divCol.appendChild(p3)
+                        divCol.appendChild(p4)
+                        divCol.appendChild(p5)
+                        divCol.appendChild(hr)
+
+                        document.getElementById('lista').appendChild(divRow)
+                    }
+                }
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
+                    //..
+                }
+
+            }
+
+            xmlHttp.send()
+        }
+    </script>
+    <title>Filmes</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light col-md-4">
+        <div class="container">
+            <div class="navbar-brand mb-0 h1">
+                <h3>Catálogo de filmes</h3>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3" id="lista">
+        <div class="row">
+            <div class="col mb-4">
+                <button type="button" class="btn btn-success" onclick="getFilmes()"> Listar filmes</button>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col">
+                    <p><strong>TÍTULO:</strong></p>
+                    <p><strong>RESUMO:</strong></p>
+                    <p><strong>GÊNERO:</strong></p>
+                    <p><strong>ELENCO:</strong></p>
+                    <p><strong>DATA DE LANÇAMENTO:</strong></p>
+                    <hr>
+                    
+                </div>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>
