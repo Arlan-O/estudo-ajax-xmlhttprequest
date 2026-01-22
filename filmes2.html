@@ -18,22 +18,14 @@
                     let JSONFilmes = xmlHttp.responseText
                     // console.log(JSONFilmes)
 
-                    let obj = JSON.parse(JSONFilmes)
-                    console.log(obj)
-                    
-                    /*
-                    // console.log(XMLFilmes)
+                    let objJSONFilmes = JSON.parse(JSONFilmes)
+                    // console.log(obj)
 
-                    let parser = new DOMParser()
+                    for (let i in objJSONFilmes.filmes) {
+                        let item = objJSONFilmes.filmes[i]
 
-                    domFilmes = parser.parseFromString(XMLFilmes, 'text/xml')
-
-                    jsonFilmes = xmlToJson(domFilmes)
-
-                    console.log(jsonFilmes)
-
-                    for (let i in jsonFilmes['filmes']['filme']) {
-                        let item = jsonFilmes['filmes']['filme'][i]
+                        console.log(item)
+                        
 
                         let divRow = document.createElement('div')
                         divRow.className = 'row'
@@ -42,18 +34,18 @@
                         divCol.className = 'col'
 
                         let p1 = document.createElement('p')
-                        p1.innerHTML = '<strong>TÍTULO: </strong>' + item['titulo']['#text']
+                        p1.innerHTML = '<strong>TÍTULO: </strong>' + item.titulo
 
                         let p2 = document.createElement('p')
-                        p2.innerHTML = '<strong>RESUMO: </strong>' + item['resumo']['#text']
+                        p2.innerHTML = '<strong>RESUMO: </strong>' + item.resumo
 
                         //============================GENERO===========================
 
                         let genero = ''
-                        for (let g in item.genero) {
+                        for (let g in item.generos) {
                             if (genero) genero += ', '
 
-                            genero += item.genero[g]['#text']
+                            genero += item.generos[g].genero
                         }
 
                         let p3 = document.createElement('p')
@@ -62,10 +54,10 @@
                         //========================ATOR================================
 
                         let elenco = ''
-                        for (let e in item.elenco.ator) {
+                        for (let e in item.elenco) {
                             if (elenco) elenco += ', '
 
-                            elenco += item.elenco.ator[e]['#text']
+                            elenco += item.elenco[e].ator
                         }
 
                         let p4 = document.createElement('p')
@@ -73,7 +65,7 @@
                         //=============================================================
 
                         let p5 = document.createElement('p')
-                        p5.innerHTML = '<strong>DATA DE LANÇAMENTO: </strong>' + item.dataLancamento['#text'] + ' (' + item.dataLancamento['@attributes']['pais'] + ')'
+                        p5.innerHTML = '<strong>DATA DE LANÇAMENTO: </strong>' + item.dataLancamento.data + ' (' + item.dataLancamento.pais + ')'
 
                         let hr = document.createElement('hr')
                         // hr.innerHTML = '<hr>'
@@ -89,7 +81,6 @@
                         document.getElementById('lista').appendChild(divRow)
                     }
 
-                    */
                 }
                 if (xmlHttp.readyState == 4 && xmlHttp.status == 404) {
                     //..
